@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HarmonyStream - Playlist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+        }
+        
+        .playlist-header {
+            background: linear-gradient(to bottom, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.5));
+            backdrop-filter: blur(10px);
+        }
+        
+        .song-row:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .song-row.active {
+            background-color: rgba(21, 128, 61, 0.2);
+        }
+        
+        .progress-bar {
+            -webkit-appearance: none;
+            height: 4px;
+            background: #334155;
+            border-radius: 2px;
+        }
+        
+        .progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #10b981;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .volume-slider {
+            -webkit-appearance: none;
+            height: 4px;
+            background: #334155;
+            border-radius: 2px;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .blurred-bg {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 pb-24">
+        <!-- Playlist Header -->
+        <header class="flex justify-between items-center mb-10">
+            <div class="flex items-center">
+                <i class="fas fa-music text-teal-400 text-3xl mr-3 my-8"></i>
+                <a href="index.html">
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent">Back To Home</h1>
+                </a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-full text-sm font-medium transition duration-300">
+                    <i class="fas fa-plus mr-2"></i>Add Music
+                </button>
+                <div class="relative">
+                    <input type="text" placeholder="Search songs..." class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm w-64 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold cursor-pointer">JS</div>
+            </div>
+        </header>
+        <div class="playlist-header rounded-2xl p-6 mb-8 mt-6 flex flex-col md:flex-row items-start md:items-end gap-6">
+            <div class="relative group">
+                <img src="https://i.scdn.co/image/ab67616d0000b27346e4e8079743a66a5467d091" alt="Playlist Cover" class="w-48 h-48 md:w-60 md:h-60 rounded-xl shadow-xl">
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 rounded-xl flex items-center justify-center">
+                    <button class="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition duration-300 w-14 h-14 bg-rose-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-play text-white text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex-1">
+                <p class="text-sm font-medium text-rose-400 mb-1">PLAYLIST</p>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Summer Vibes 2023</h1>
+                <p class="text-gray-300 mb-4">The perfect soundtrack for your summer adventures. Sunny days, warm nights, and endless memories.</p>
+                
+                <div class="flex items-center text-sm text-gray-400">
+                    <div class="flex items-center mr-6">
+                        <img src="https://i.scdn.co/image/ab67616d0000b27346e4e8079743a66a5467d091" alt="Creator" class="w-6 h-6 rounded-full mr-2">
+                        <span>HarmonyStream</span>
+                    </div>
+                    <span class="mr-6">24 songs</span>
+                    <span>2h 18m</span>
+                </div>
+                
+                <div class="flex items-center mt-6 space-x-4">
+                    <button class="bg-rose-600 hover:bg-rose-700 text-white px-6 py-2 rounded-full text-sm font-medium transition duration-300 flex items-center">
+                        <i class="fas fa-play mr-2"></i> Play All
+                    </button>
+                    <button class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full text-sm font-medium transition duration-300 flex items-center">
+                        <i class="fas fa-random mr-2"></i> Shuffle
+                    </button>
+                    <button class="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-full text-sm transition duration-300">
+                        <i class="fas fa-heart text-rose-500"></i>
+                    </button>
+                    <button class="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-full text-sm transition duration-300">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Playlist Content -->
+        <div class="bg-gray-800 bg-opacity-50 rounded-2xl p-6">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-700 mb-6">
+                <button class="tab-btn active px-4 py-2 text-sm font-medium text-white border-b-2 border-rose-500">Songs</button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-400 hover:text-white">About</button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-400 hover:text-white">More Like This</button>
+            </div>
+            
+            <!-- Search and Sort -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <div class="relative w-full md:w-64">
+                    <input type="text" placeholder="Search in playlist..." class="w-full bg-gray-700 text-white px-4 py-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 pl-10">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+                </div>
+                
+                <div class="flex items-center space-x-2 text-sm">
+                    <span class="text-gray-400">Sort by:</span>
+                    <select class="bg-gray-700 border border-gray-600 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+                        <option>Custom Order</option>
+                        <option>Title</option>
+                        <option>Artist</option>
+                        <option>Recently Added</option>
+                        <option>Most Played</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Songs Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left text-gray-400 text-sm border-b border-gray-700">
+                            <th class="pb-3 w-12 text-center">#</th>
+                            <th class="pb-3">Title</th>
+                            <th class="pb-3">Album</th>
+                            <th class="pb-3 w-32 text-right">Duration</th>
+                            <th class="pb-3 w-12"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="playlist-songs">
+                        <!-- Songs will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Similar Playlists -->
+        <div class="mt-10">
+            <h2 class="text-2xl font-bold mb-6">More Like This</h2>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <!-- Playlist Card 1 -->
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-4 hover:bg-gray-700 transition duration-300 group">
+                    <div class="relative mb-4">
+                        <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da840ce526fa2d17885de98f69bd" alt="Playlist" class="w-full rounded-lg">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                            <button class="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition duration-300 w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-play text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <h3 class="font-medium mb-1">Beach House</h3>
+                    <p class="text-gray-400 text-sm">By HarmonyStream</p>
+                    <p class="text-gray-500 text-xs mt-2">18 songs • 1h 42m</p>
+                </div>
+                
+                <!-- Playlist Card 2 -->
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-4 hover:bg-gray-700 transition duration-300 group">
+                    <div class="relative mb-4">
+                        <img src="https://m.media-amazon.com/images/I/51MTy+K6L7L._UF1000,1000_QL80_.jpg" alt="Playlist" class="w-full rounded-lg">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                            <button class="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition duration-300 w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-play text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <h3 class="font-medium mb-1">Tropical Paradise</h3>
+                    <p class="text-gray-400 text-sm">By HarmonyStream</p>
+                    <p class="text-gray-500 text-xs mt-2">22 songs • 2h 5m</p>
+                </div>
+                
+                <!-- Playlist Card 3 -->
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-4 hover:bg-gray-700 transition duration-300 group">
+                    <div class="relative mb-4">
+                        <img src="https://i.scdn.co/image/ab67616d00001e022c614834e16037c6fd6bea46" alt="Playlist" class="w-full rounded-lg">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                            <button class="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition duration-300 w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-play text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <h3 class="font-medium mb-1">Poolside Chill</h3>
+                    <p class="text-gray-400 text-sm">By HarmonyStream</p>
+                    <p class="text-gray-500 text-xs mt-2">15 songs • 1h 18m</p>
+                </div>
+                
+                <!-- Playlist Card 4 -->
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-4 hover:bg-gray-700 transition duration-300 group">
+                    <div class="relative mb-4">
+                        <img src="https://geo-static.traxsource.com/files/images/1c815898da20e57ac5a9ee565fd9d43c.jpg" alt="Playlist" class="w-full rounded-lg">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                            <button class="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition duration-300 w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-play text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <h3 class="font-medium mb-1">Sunset Sessions</h3>
+                    <p class="text-gray-400 text-sm">By HarmonyStream</p>
+                    <p class="text-gray-500 text-xs mt-2">20 songs • 1h 55m</p>
+                </div>
+                
+                <!-- Playlist Card 5 -->
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-4 hover:bg-gray-700 transition duration-300 group">
+                    <div class="relative mb-4">
+                        <img src="https://i1.sndcdn.com/artworks-YXU2lm4hyU2GnMYZ-71nyVw-t500x500.jpg" alt="Playlist" class="w-full rounded-lg">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                            <button class="opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition duration-300 w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-play text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <h3 class="font-medium mb-1">Road Trip Essentials</h3>
+                    <p class="text-gray-400 text-sm">By HarmonyStream</p>
+                    <p class="text-gray-500 text-xs mt-2">25 songs • 2h 30m</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Player Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 backdrop-blur-sm border-t border-gray-700 p-4">
+        <div class="container mx-auto flex flex-col md:flex-row items-center">
+            <!-- Song Info -->
+            <div class="flex items-center w-full md:w-1/4 mb-4 md:mb-0">
+                <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png" alt="Now Playing" class="w-12 h-12 rounded mr-3">
+                <div>
+                    <h4 class="font-medium text-sm">Blinding Lights</h4>
+                    <p class="text-gray-400 text-xs">The Weeknd</p>
+                </div>
+                <button class="ml-4 text-rose-500 hover:text-rose-400">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+            
+            <!-- Player Controls -->
+            <div class="w-full md:w-2/4 flex flex-col items-center">
+                <div class="flex items-center space-x-6 mb-2">
+                    <button class="text-gray-400 hover:text-white text-lg">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center text-white hover:bg-teal-600">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-lg">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+                
+                <div class="w-full flex items-center space-x-3">
+                    <span class="text-xs text-gray-400">1:24</span>
+                    <input type="range" min="0" max="100" value="35" class="progress-bar w-full">
+                    <span class="text-xs text-gray-400">3:45</span>
+                </div>
+            </div>
+            
+            <!-- Volume and Other Controls -->
+            <div class="w-full md:w-1/4 flex items-center justify-end space-x-4 mt-4 md:mt-0">
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-list"></i>
+                </button>
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-desktop"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-volume-down text-gray-400"></i>
+                    <input type="range" min="0" max="100" value="80" class="volume-slider w-20">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample playlist songs data
+        const playlistSongs = [
+            { 
+                id: 1, 
+                title: "Blinding Lights", 
+                artist: "The Weeknd", 
+                album: "After Hours", 
+                duration: "3:20", 
+                added: "2 weeks ago",
+                plays: 1245,
+                isFavorite: true,
+                isPlaying: false
+            },
+            { 
+                id: 2, 
+                title: "Watermelon Sugar", 
+                artist: "Harry Styles", 
+                album: "Fine Line", 
+                duration: "2:54", 
+                added: "3 weeks ago",
+                plays: 987,
+                isFavorite: true,
+                isPlaying: false
+            },
+            { 
+                id: 3, 
+                title: "Levitating", 
+                artist: "Dua Lipa", 
+                album: "Future Nostalgia", 
+                duration: "3:23", 
+                added: "1 month ago",
+                plays: 1562,
+                isFavorite: false,
+                isPlaying: true
+            },
+            { 
+                id: 4, 
+                title: "Stay", 
+                artist: "The Kid LAROI, Justin Bieber", 
+                album: "F*CK LOVE 3: OVER YOU", 
+                duration: "2:21", 
+                added: "2 months ago",
+                plays: 2034,
+                isFavorite: false,
+                isPlaying: false
+            },
+            { 
+                id: 5, 
+                title: "good 4 u", 
+                artist: "Olivia Rodrigo", 
+                album: "SOUR", 
+                duration: "2:58", 
+                added: "3 weeks ago",
+                plays: 1789,
+                isFavorite: true,
+                isPlaying: false
+            },
+            { 
+                id: 6, 
+                title: "Save Your Tears", 
+                artist: "The Weeknd", 
+                album: "After Hours", 
+                duration: "3:35", 
+                added: "1 month ago",
+                plays: 1423,
+                isFavorite: false,
+                isPlaying: false
+            },
+            { 
+                id: 7, 
+                title: "Don't Start Now", 
+                artist: "Dua Lipa", 
+                album: "Future Nostalgia", 
+                duration: "3:03", 
+                added: "2 months ago",
+                plays: 1987,
+                isFavorite: true,
+                isPlaying: false
+            },
+            { 
+                id: 8, 
+                title: "Peaches", 
+                artist: "Justin Bieber", 
+                album: "Justice", 
+                duration: "3:18", 
+                added: "3 weeks ago",
+                plays: 1123,
+                isFavorite: false,
+                isPlaying: false
+            }
+        ];
+
+        // DOM elements
+        const songsTable = document.getElementById('playlist-songs');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        
+        // Render playlist songs
+        function renderSongs() {
+            songsTable.innerHTML = '';
+            
+            playlistSongs.forEach((song, index) => {
+                const songRow = document.createElement('tr');
+                songRow.className = `song-row h-14 text-sm ${song.isPlaying ? 'active' : ''}`;
+                
+                songRow.innerHTML = `
+                    <td class="text-center text-gray-400">${index + 1}</td>
+                    <td>
+                        <div class="flex items-center">
+                            <img src="https://source.unsplash.com/random/40x40/?${song.artist.toLowerCase().replace(' ', '')},album" alt="${song.title}" class="w-10 h-10 rounded mr-3">
+                            <div>
+                                <div class="font-medium ${song.isPlaying ? 'text-teal-400' : ''}">${song.title}</div>
+                                <div class="text-gray-400 text-xs">${song.artist}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-gray-400">${song.album}</td>
+                    <td class="text-right text-gray-400">${song.duration}</td>
+                    <td class="text-right">
+                        <button class="favorite-btn p-2 rounded-full ${song.isFavorite ? 'text-rose-500' : 'text-gray-400 hover:text-white'}">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="p-2 rounded-full text-gray-400 hover:text-white">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </td>
+                `;
+                
+                songsTable.appendChild(songRow);
+            });
+        }
+        
+        // Tab switching
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabButtons.forEach(b => b.classList.remove('active', 'text-white', 'border-rose-500'));
+                tabButtons.forEach(b => b.classList.add('text-gray-400'));
+                
+                btn.classList.add('active', 'text-white', 'border-rose-500');
+                btn.classList.remove('text-gray-400');
+                
+                // Here you would normally load different content based on the tab
+                console.log('Switched to tab:', btn.textContent);
+            });
+        });
+        
+        // Toggle favorite
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.favorite-btn')) {
+                e.preventDefault();
+                const btn = e.target.closest('.favorite-btn');
+                const isFavorite = btn.classList.contains('text-rose-500');
+                
+                if (isFavorite) {
+                    btn.classList.remove('text-rose-500');
+                    btn.classList.add('text-gray-400');
+                } else {
+                    btn.classList.add('text-rose-500');
+                    btn.classList.remove('text-gray-400');
+                }
+                
+                // Here you would normally update your data store
+                console.log('Favorite toggled');
+            }
+        });
+        
+        // Initialize
+        renderSongs();
+    </script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HarmonyStream - Favorites</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+        }
+        
+        .album-card {
+            transition: all 0.3s ease;
+        }
+        
+        .album-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .album-cover {
+            transition: transform 0.3s ease;
+        }
+        
+        .album-cover:hover {
+            transform: scale(1.05);
+        }
+        
+        .filter-btn.active {
+            background-color: #38b2ac;
+            color: white;
+        }
+        
+        .play-btn {
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .album-card:hover .play-btn {
+            opacity: 1;
+        }
+        
+        .favorite-btn.active {
+            color: #f43f5e;
+        }
+        
+        .empty-state {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px dashed #3b82f6;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-10">
+            <div class="flex items-center">
+                <i class="fas fa-heart text-rose-500 text-3xl mr-3"></i>
+                <a href="index.html">
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-rose-500 to-purple-500 bg-clip-text text-transparent">Back To Home</h1>
+                </a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" placeholder="Search favorites..." class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm w-64 focus:outline-none focus:ring-2 focus:ring-rose-500">
+                    <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold cursor-pointer">JS</div>
+            </div>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar -->
+            <div class="w-full lg:w-1/4 bg-gray-800 bg-opacity-50 rounded-xl p-6">
+                <h2 class="text-xl font-semibold mb-6 text-rose-400">Filter Favorites</h2>
+                
+                <div class="mb-8">
+                    <h3 class="text-sm font-medium mb-3 text-gray-400 uppercase">Content Type</h3>
+                    <div class="space-y-2">
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm active" data-type="all">
+                            <i class="fas fa-heart mr-2"></i>All Favorites
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-type="albums">
+                            <i class="fas fa-compact-disc mr-2"></i>Albums
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-type="songs">
+                            <i class="fas fa-music mr-2"></i>Songs
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-type="artists">
+                            <i class="fas fa-user mr-2"></i>Artists
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-type="playlists">
+                            <i class="fas fa-list mr-2"></i>Playlists
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="text-sm font-medium mb-3 text-gray-400 uppercase">Sort By</h3>
+                    <select class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+                        <option>Recently Added</option>
+                        <option>Alphabetical (A-Z)</option>
+                        <option>Alphabetical (Z-A)</option>
+                        <option>Most Played</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium mb-3 text-gray-400 uppercase">Actions</h3>
+                    <button class="w-full bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg text-sm mb-2 transition duration-300">
+                        <i class="fas fa-download mr-2"></i>Export Favorites
+                    </button>
+                    <button class="w-full bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm transition duration-300">
+                        <i class="fas fa-trash mr-2"></i>Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="w-full lg:w-3/4">
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold">Favorite Albums</h2>
+                        <p class="text-gray-400">Showing <span id="favorites-count">6</span> items</p>
+                    </div>
+                    
+                    <!-- Favorites Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6" id="favorites-grid">
+                        <!-- Favorites will be populated by JavaScript -->
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div id="empty-state" class="hidden">
+                        <div class="empty-state rounded-xl p-10 text-center my-10">
+                            <div class="w-20 h-20 bg-rose-900 bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-heart-broken text-rose-500 text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">No favorites yet</h3>
+                            <p class="text-gray-400 mb-6">Start adding your favorite albums, songs and artists to see them here</p>
+                            <button class="bg-rose-600 hover:bg-rose-700 text-white px-6 py-2 rounded-full text-sm font-medium transition duration-300">
+                                <i class="fas fa-compact-disc mr-2"></i>Browse Albums
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Player Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 backdrop-blur-sm border-t border-gray-700 p-4">
+        <div class="container mx-auto flex flex-col md:flex-row items-center">
+            <!-- Song Info -->
+            <div class="flex items-center w-full md:w-1/4 mb-4 md:mb-0">
+                <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png" alt="Now Playing" class="w-12 h-12 rounded mr-3">
+                <div>
+                    <h4 class="font-medium text-sm">Blinding Lights</h4>
+                    <p class="text-gray-400 text-xs">The Weeknd</p>
+                </div>
+                <button class="ml-4 text-rose-500 hover:text-rose-400 favorite-btn active">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+            
+            <!-- Player Controls -->
+            <div class="w-full md:w-2/4 flex flex-col items-center">
+                <div class="flex items-center space-x-6 mb-2">
+                    <button class="text-gray-400 hover:text-white text-lg">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center text-white hover:bg-teal-600">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-lg">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+                
+                <div class="w-full flex items-center space-x-3">
+                    <span class="text-xs text-gray-400">1:24</span>
+                    <input type="range" min="0" max="100" value="35" class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                    <span class="text-xs text-gray-400">3:45</span>
+                </div>
+            </div>
+            
+            <!-- Volume and Other Controls -->
+            <div class="w-full md:w-1/4 flex items-center justify-end space-x-4 mt-4 md:mt-0">
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-list"></i>
+                </button>
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-desktop"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-volume-down text-gray-400"></i>
+                    <input type="range" min="0" max="100" value="80" class="w-20 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample favorites data
+        const favorites = [
+            { 
+                id: 1, 
+                type: "album", 
+                title: "After Hours", 
+                artist: "The Weeknd", 
+                year: 2020, 
+                genre: "pop", 
+                cover: "https://source.unsplash.com/random/300x300/?weeknd,album", 
+                songs: 14, 
+                duration: "56:19",
+                addedDate: "2023-05-15"
+            },
+            { 
+                id: 2, 
+                type: "album", 
+                title: "Future Nostalgia", 
+                artist: "Dua Lipa", 
+                year: 2020, 
+                genre: "pop", 
+                cover: "https://source.unsplash.com/random/300x300/?dualipa,album", 
+                songs: 11, 
+                duration: "50:31",
+                addedDate: "2023-04-22"
+            },
+            { 
+                id: 3, 
+                type: "song", 
+                title: "Blinding Lights", 
+                artist: "The Weeknd", 
+                album: "After Hours", 
+                year: 2020, 
+                genre: "pop", 
+                cover: "https://source.unsplash.com/random/300x300/?weeknd,song", 
+                duration: "3:20",
+                addedDate: "2023-06-10"
+            },
+            { 
+                id: 4, 
+                type: "artist", 
+                name: "Dua Lipa", 
+                genre: "pop", 
+                cover: "https://source.unsplash.com/random/300x300/?dualipa,artist", 
+                albums: 3,
+                followers: "12.5M",
+                addedDate: "2023-03-18"
+            },
+            { 
+                id: 5, 
+                type: "playlist", 
+                title: "Chill Vibes", 
+                creator: "HarmonyStream", 
+                cover: "https://source.unsplash.com/random/300x300/?playlist,chill", 
+                songs: 24, 
+                duration: "1h 32m",
+                followers: "45K",
+                addedDate: "2023-07-05"
+            },
+            { 
+                id: 6, 
+                type: "album", 
+                title: "Chromatica", 
+                artist: "Lady Gaga", 
+                year: 2020, 
+                genre: "pop", 
+                cover: "https://source.unsplash.com/random/300x300/?ladygaga,album", 
+                songs: 13, 
+                duration: "43:08",
+                addedDate: "2023-02-28"
+            }
+        ];
+
+        // DOM elements
+        const favoritesGrid = document.getElementById('favorites-grid');
+        const favoritesCount = document.getElementById('favorites-count');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const emptyState = document.getElementById('empty-state');
+        
+        // Current filter
+        let currentType = 'all';
+        
+        // Render favorites
+        function renderFavorites() {
+            favoritesGrid.innerHTML = '';
+            
+            const filteredFavorites = favorites.filter(item => {
+                return currentType === 'all' || item.type === currentType;
+            });
+            
+            favoritesCount.textContent = filteredFavorites.length;
+            
+            // Show empty state if no favorites
+            if (filteredFavorites.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                
+                filteredFavorites.forEach(item => {
+                    const favoriteElement = document.createElement('div');
+                    favoriteElement.className = 'album-card group';
+                    
+                    let contentHTML = '';
+                    
+                    if (item.type === 'album') {
+                        contentHTML = `
+                            <div class="relative mb-3 overflow-hidden rounded-lg album-cover">
+                                <img src="${item.cover}" alt="${item.title}" class="w-full h-auto rounded-lg">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                                    <button class="play-btn w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                                        <i class="fas fa-play text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <h3 class="font-medium text-sm mb-1">${item.title}</h3>
+                                <p class="text-gray-400 text-xs">${item.artist} • ${item.year}</p>
+                                <p class="text-gray-500 text-xs mt-1">${item.songs} songs • ${item.duration}</p>
+                            </div>
+                        `;
+                    } else if (item.type === 'song') {
+                        contentHTML = `
+                            <div class="relative mb-3 overflow-hidden rounded-lg album-cover">
+                                <img src="${item.cover}" alt="${item.title}" class="w-full h-auto rounded-lg">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                                    <button class="play-btn w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                                        <i class="fas fa-play text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <h3 class="font-medium text-sm mb-1">${item.title}</h3>
+                                <p class="text-gray-400 text-xs">${item.artist} • ${item.album}</p>
+                                <p class="text-gray-500 text-xs mt-1">${item.duration}</p>
+                            </div>
+                        `;
+                    } else if (item.type === 'artist') {
+                        contentHTML = `
+                            <div class="relative mb-3 overflow-hidden rounded-full album-cover">
+                                <img src="${item.cover}" alt="${item.name}" class="w-full h-auto rounded-full aspect-square object-cover">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                                    <button class="play-btn w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                                        <i class="fas fa-play text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <h3 class="font-medium text-sm mb-1">${item.name}</h3>
+                                <p class="text-gray-400 text-xs capitalize">${item.genre}</p>
+                                <p class="text-gray-500 text-xs mt-1">${item.albums} albums • ${item.followers}</p>
+                            </div>
+                        `;
+                    } else if (item.type === 'playlist') {
+                        contentHTML = `
+                            <div class="relative mb-3 overflow-hidden rounded-lg album-cover">
+                                <img src="${item.cover}" alt="${item.title}" class="w-full h-auto rounded-lg">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                                    <button class="play-btn w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                                        <i class="fas fa-play text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <h3 class="font-medium text-sm mb-1">${item.title}</h3>
+                                <p class="text-gray-400 text-xs">By ${item.creator}</p>
+                                <p class="text-gray-500 text-xs mt-1">${item.songs} songs • ${item.duration}</p>
+                            </div>
+                        `;
+                    }
+                    
+                    favoriteElement.innerHTML = `
+                        <div class="relative">
+                            ${contentHTML}
+                            <button class="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-70 favorite-btn active">
+                                <i class="fas fa-heart text-rose-500"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    favoritesGrid.appendChild(favoriteElement);
+                });
+            }
+        }
+        
+        // Filter favorites by type
+        function filterByType(type) {
+            currentType = type;
+            renderFavorites();
+            
+            // Update active button
+            filterButtons.forEach(btn => {
+                if (btn.dataset.type === type) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // Event listeners for filter buttons
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => filterByType(btn.dataset.type));
+        });
+        
+        // Initialize
+        renderFavorites();
+        filterByType('all');
+        
+        // Toggle favorite button
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.favorite-btn')) {
+                e.preventDefault();
+                const btn = e.target.closest('.favorite-btn');
+                btn.classList.toggle('active');
+                
+                // Here you would normally update your data store
+                console.log('Favorite toggled');
+            }
+        });
+    </script>
+</body>
+</html>

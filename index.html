@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HarmonyStream - Your Music Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+        }
+        
+        .progress-bar {
+            -webkit-appearance: none;
+            height: 6px;
+            background: #4a5568;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #38b2ac;
+        }
+        
+        .album-art {
+            transition: transform 0.3s ease;
+        }
+        
+        .album-art:hover {
+            transform: scale(1.05);
+        }
+        
+        .song-item:hover {
+            background-color: rgba(74, 85, 104, 0.5);
+        }
+        
+        .volume-slider {
+            -webkit-appearance: none;
+            height: 4px;
+            background: #4a5568;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #38b2ac;
+        }
+        
+        .active-song {
+            background-color: rgba(56, 178, 172, 0.2);
+            border-left: 3px solid #38b2ac;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-10">
+            <div class="flex items-center">
+                <i class="fas fa-music text-teal-400 text-3xl mr-3"></i>
+                <a href="index.html">
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent">HarmonyStream</h1>
+                </a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-full text-sm font-medium transition duration-300">
+                    <i class="fas fa-plus mr-2"></i>Add Music
+                </button>
+                <div class="relative">
+                    <input type="text" placeholder="Search songs..." class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm w-64 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold cursor-pointer">JS</div>
+            </div>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar -->
+            <div class="w-full lg:w-1/4 bg-gray-800 bg-opacity-50 rounded-xl p-6">
+                <h2 class="text-xl font-semibold mb-6 text-teal-400">Library</h2>
+                <ul class="space-y-3">
+                    <li class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-700">
+                        <i class="fas fa-home text-gray-400"></i>
+                        <span>Home</span>
+                    </li>
+                    <li class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-700">
+                        <i class="fas fa-compact-disc text-gray-400"></i>
+                        <a href="./albums.html">
+                            <span>Albums</span>
+                        </a>
+                    </li>
+                    <li class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-700">
+                        <i class="fas fa-heart text-gray-400"></i>
+                        <a href="favor.htm">
+                            <span>Favorites</span>
+                        </a>
+                    </li>
+                    <li class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-700">
+                        <i class="fas fa-list text-gray-400"></i>
+                        <a href="playlist.htm">
+                            <span>Playlists</span>
+                        </a>
+                    </li>
+                    <li class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-700">
+                        <i class="fas fa-history text-gray-400"></i>
+                        <span>Recently Played</span>
+                    </li>
+                </ul>
+
+                <h2 class="text-xl font-semibold mt-10 mb-4 text-teal-400">Playlists</h2>
+                <ul class="space-y-2">
+                    <li class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-700">
+                        <i class="fas fa-list text-gray-400"></i>
+                        <span>Chill Vibes</span>
+                    </li>
+                    <li class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-700">
+                        <i class="fas fa-list text-gray-400"></i>
+                        <span>Workout Mix</span>
+                    </li>
+                    <li class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-700">
+                        <i class="fas fa-list text-gray-400"></i>
+                        <span>Study Focus</span>
+                    </li>
+                    <li class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-700">
+                        <i class="fas fa-list text-gray-400"></i>
+                        <span>Road Trip</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="w-full lg:w-3/4">
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-6 mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold">Recently Played</h2>
+                        <a href="#" class="text-teal-400 text-sm hover:underline">See all</a>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                        <!-- Album Cards -->
+                        <div class="album-card cursor-pointer">
+                            <div class="album-art relative overflow-hidden rounded-lg mb-3">
+                                <img src="https://source.unsplash.com/random/300x300/?album,music,1" alt="Album Cover" class="w-full h-auto rounded-lg">
+                                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
+                                    <button class="play-btn w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 class="font-medium text-sm">Midnight Memories</h3>
+                            <p class="text-gray-400 text-xs">Various Artists</p>
+                        </div>
+                        
+                        <div class="album-card cursor-pointer">
+                            <div class="album-art relative overflow-hidden rounded-lg mb-3">
+                                <img src="https://source.unsplash.com/random/300x300/?album,music,2" alt="Album Cover" class="w-full h-auto rounded-lg">
+                                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
+                                    <button class="play-btn w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 class="font-medium text-sm">Summer Vibes</h3>
+                            <p class="text-gray-400 text-xs">DJ Chill</p>
+                        </div>
+                        
+                        <div class="album-card cursor-pointer">
+                            <div class="album-art relative overflow-hidden rounded-lg mb-3">
+                                <img src="https://source.unsplash.com/random/300x300/?album,music,3" alt="Album Cover" class="w-full h-auto rounded-lg">
+                                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
+                                    <button class="play-btn w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 class="font-medium text-sm">Acoustic Sessions</h3>
+                            <p class="text-gray-400 text-xs">Sarah Melody</p>
+                        </div>
+                        
+                        <div class="album-card cursor-pointer">
+                            <div class="album-art relative overflow-hidden rounded-lg mb-3">
+                                <img src="https://source.unsplash.com/random/300x300/?album,music,4" alt="Album Cover" class="w-full h-auto rounded-lg">
+                                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
+                                    <button class="play-btn w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 class="font-medium text-sm">Electronic Dreams</h3>
+                            <p class="text-gray-400 text-xs">Neon Waves</p>
+                        </div>
+                        
+                        <div class="album-card cursor-pointer">
+                            <div class="album-art relative overflow-hidden rounded-lg mb-3">
+                                <img src="https://source.unsplash.com/random/300x300/?album,music,5" alt="Album Cover" class="w-full h-auto rounded-lg">
+                                <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
+                                    <button class="play-btn w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-white"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 class="font-medium text-sm">Jazz Classics</h3>
+                            <p class="text-gray-400 text-xs">The Cool Cats</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold">Your Collection</h2>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 bg-gray-700 rounded-lg text-sm hover:bg-gray-600">All</button>
+                            <button class="px-3 py-1 bg-gray-700 rounded-lg text-sm hover:bg-gray-600">Artists</button>
+                            <button class="px-3 py-1 bg-gray-700 rounded-lg text-sm hover:bg-gray-600">Albums</button>
+                            <button class="px-3 py-1 bg-gray-700 rounded-lg text-sm hover:bg-gray-600">Songs</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Song List -->
+                    <div class="overflow-hidden rounded-lg">
+                        <div class="grid grid-cols-12 bg-gray-700 bg-opacity-70 p-3 text-gray-400 text-sm font-medium">
+                            <div class="col-span-1">#</div>
+                            <div class="col-span-5">Title</div>
+                            <div class="col-span-3">Artist</div>
+                            <div class="col-span-2">Album</div>
+                            <div class="col-span-1 text-right">Time</div>
+                        </div>
+                        
+                        <div id="song-list" class="divide-y divide-gray-700 divide-opacity-50">
+                            <!-- Songs will be added here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Player Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 backdrop-blur-sm border-t border-gray-700 p-4">
+        <div class="container mx-auto flex flex-col md:flex-row items-center">
+            <!-- Song Info -->
+            <div class="flex items-center w-full md:w-1/4 mb-4 md:mb-0">
+                <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png" alt="Now Playing" class="w-12 h-12 rounded mr-3">
+                <div>
+                    <h4 class="font-medium text-sm" id="now-playing-title">Blinding Lights</h4>
+                    <p class="text-gray-400 text-xs" id="now-playing-artist">The Weeknd</p>
+                </div>
+                <button class="ml-4 text-gray-400 hover:text-teal-400">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
+            
+            <!-- Player Controls -->
+            <div class="w-full md:w-2/4 flex flex-col items-center">
+                <div class="flex items-center space-x-6 mb-2">
+                    <button class="text-gray-400 hover:text-white text-lg">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button id="play-pause-btn" class="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center text-white hover:bg-teal-600">
+                        <i class="fas fa-play" id="play-pause-icon"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-lg">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+                
+                <div class="w-full flex items-center space-x-3">
+                    <span class="text-xs text-gray-400" id="current-time">0:00</span>
+                    <input type="range" min="0" max="100" value="0" class="progress-bar flex-grow">
+                    <span class="text-xs text-gray-400" id="total-time">3:45</span>
+                </div>
+            </div>
+            
+            <!-- Volume and Other Controls -->
+            <div class="w-full md:w-1/4 flex items-center justify-end space-x-4 mt-4 md:mt-0">
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-list"></i>
+                </button>
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-desktop"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-volume-down text-gray-400"></i>
+                    <input type="range" min="0" max="100" value="80" class="volume-slider w-20">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample music data
+        const songs = [
+            { id: 1, title: "Blinding Lights", artist: "The Weeknd", album: "After Hours", duration: "3:20", cover: "https://source.unsplash.com/random/300x300/?weeknd" },
+            { id: 2, title: "Save Your Tears", artist: "The Weeknd", album: "After Hours", duration: "3:35", cover: "https://source.unsplash.com/random/300x300/?weeknd" },
+            { id: 3, title: "Levitating", artist: "Dua Lipa", album: "Future Nostalgia", duration: "3:23", cover: "https://source.unsplash.com/random/300x300/?dualipa" },
+            { id: 4, title: "Don't Start Now", artist: "Dua Lipa", album: "Future Nostalgia", duration: "3:03", cover: "https://source.unsplash.com/random/300x300/?dualipa" },
+            { id: 5, title: "Watermelon Sugar", artist: "Harry Styles", album: "Fine Line", duration: "2:54", cover: "https://source.unsplash.com/random/300x300/?harrystyles" },
+            { id: 6, title: "Adore You", artist: "Harry Styles", album: "Fine Line", duration: "3:27", cover: "https://source.unsplash.com/random/300x300/?harrystyles" },
+            { id: 7, title: "Circles", artist: "Post Malone", album: "Hollywood's Bleeding", duration: "3:35", cover: "https://source.unsplash.com/random/300x300/?postmalone" },
+            { id: 8, title: "Sunflower", artist: "Post Malone, Swae Lee", album: "Spider-Man: Into the Spider-Verse", duration: "2:38", cover: "https://source.unsplash.com/random/300x300/?postmalone" }
+        ];
+
+        // Current playing song
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let audio = new Audio();
+        
+        // DOM elements
+        const songListElement = document.getElementById('song-list');
+        const nowPlayingTitle = document.getElementById('now-playing-title');
+        const nowPlayingArtist = document.getElementById('now-playing-artist');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const currentTimeElement = document.getElementById('current-time');
+        const totalTimeElement = document.getElementById('total-time');
+        const progressBar = document.querySelector('.progress-bar');
+        
+        // Render song list
+        function renderSongList() {
+            songListElement.innerHTML = '';
+            
+            songs.forEach((song, index) => {
+                const songElement = document.createElement('div');
+                songElement.className = `grid grid-cols-12 p-3 text-sm cursor-pointer song-item ${index === currentSongIndex ? 'active-song' : ''}`;
+                songElement.innerHTML = `
+                    <div class="col-span-1 flex items-center">${index + 1}</div>
+                    <div class="col-span-5 flex items-center">
+                        <img src="${song.cover}" alt="${song.title}" class="w-10 h-10 rounded mr-3">
+                        <span>${song.title}</span>
+                    </div>
+                    <div class="col-span-3 flex items-center">${song.artist}</div>
+                    <div class="col-span-2 flex items-center">${song.album}</div>
+                    <div class="col-span-1 flex items-center justify-end">${song.duration}</div>
+                `;
+                
+                songElement.addEventListener('click', () => {
+                    playSong(index);
+                });
+                
+                songListElement.appendChild(songElement);
+            });
+        }
+        
+        // Play song
+        function playSong(index) {
+            currentSongIndex = index;
+            const song = songs[index];
+            
+            audio.src = `https://example.com/music/${song.id}.mp3`; // Replace with actual audio source
+            audio.play();
+            isPlaying = true;
+            
+            nowPlayingTitle.textContent = song.title;
+            nowPlayingArtist.textContent = song.artist;
+            playPauseIcon.className = 'fas fa-pause';
+            totalTimeElement.textContent = song.duration;
+            
+            // Update active song in list
+            renderSongList();
+        }
+        
+        // Toggle play/pause
+        function togglePlayPause() {
+            if (isPlaying) {
+                audio.pause();
+                playPauseIcon.className = 'fas fa-play';
+            } else {
+                audio.play();
+                playPauseIcon.className = 'fas fa-pause';
+            }
+            isPlaying = !isPlaying;
+        }
+        
+        // Update progress bar
+        function updateProgressBar() {
+            const currentTime = audio.currentTime;
+            const duration = audio.duration || 1;
+            const progressPercent = (currentTime / duration) * 100;
+            
+            progressBar.value = progressPercent;
+            
+            // Format current time
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = Math.floor(currentTime % 60).toString().padStart(2, '0');
+            currentTimeElement.textContent = `${minutes}:${seconds}`;
+        }
+        
+        // Seek in song
+        function seekSong(e) {
+            const seekTime = (e.target.value / 100) * audio.duration;
+            audio.currentTime = seekTime;
+        }
+        
+        // Event listeners
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        progressBar.addEventListener('input', seek);
+        
+        // Play next song when current ends
+        audio.addEventListener('ended', () => {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            playSong(currentSongIndex);
+        });
+        
+        // Update progress bar continuously
+        audio.addEventListener('timeupdate', updateProgressBar);
+        
+        // Initialize
+        renderSongList();
+        playSong(0);
+        
+        // Album play buttons
+        document.querySelectorAll('.play-btn').forEach((btn, index) => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                playSong(index);
+            });
+        });
+        
+        // Album card click
+        document.querySelectorAll('.album-card').forEach((card, index) => {
+            card.addEventListener('click', () => {
+                // In a real app, this would show the album's songs
+                alert(`Showing songs from ${songs[index].album}`);
+            });
+        });
+    </script>
+</body>
+</html>

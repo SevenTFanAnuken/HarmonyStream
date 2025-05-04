@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HarmonyStream - Albums</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+        }
+        
+        .album-card {
+            transition: all 0.3s ease;
+        }
+        
+        .album-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .album-cover {
+            transition: transform 0.3s ease;
+        }
+        
+        .album-cover:hover {
+            transform: scale(1.05);
+        }
+        
+        .filter-btn.active {
+            background-color: #38b2ac;
+            color: white;
+        }
+        
+        .play-btn {
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .album-card:hover .play-btn {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-10">
+            <div class="flex items-center">
+                <i class="fas fa-compact-disc text-teal-400 text-3xl mr-3"></i>
+                <a href="index.html">
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent">Back To Home</h1>
+                </a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-full text-sm font-medium transition duration-300">
+                    <i class="fas fa-plus mr-2"></i>New Album
+                </button>
+                <div class="relative">
+                    <input type="text" placeholder="Search albums..." class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm w-64 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold cursor-pointer">JS</div>
+            </div>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar -->
+            <div class="w-full lg:w-1/4 bg-gray-800 bg-opacity-50 rounded-xl p-6">
+                <h2 class="text-xl font-semibold mb-6 text-teal-400">Filter Albums</h2>
+                
+                <div class="mb-8">
+                    <h3 class="text-sm font-medium mb-3 text-gray-400 uppercase">Genres</h3>
+                    <div class="space-y-2">
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-genre="all">
+                            All Genres
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-genre="pop">
+                            Pop
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-genre="rock">
+                            Rock
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-genre="electronic">
+                            Electronic
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-genre="hiphop">
+                            Hip Hop
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-genre="jazz">
+                            Jazz
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="text-sm font-medium mb-3 text-gray-400 uppercase">Years</h3>
+                    <div class="space-y-2">
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-year="all">
+                            All Years
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-year="2023">
+                            2023
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-year="2022">
+                            2022
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-year="2021">
+                            2021
+                        </button>
+                        <button class="filter-btn w-full text-left px-3 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-sm" data-year="2020">
+                            2020
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-medium mb-3 text-gray-400 uppercase">Sort By</h3>
+                    <select class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option>Recently Added</option>
+                        <option>Alphabetical (A-Z)</option>
+                        <option>Alphabetical (Z-A)</option>
+                        <option>Release Date (Newest)</option>
+                        <option>Release Date (Oldest)</option>
+                        <option>Most Played</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="w-full lg:w-3/4">
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold">All Albums</h2>
+                        <p class="text-gray-400">Showing <span id="album-count">24</span> albums</p>
+                    </div>
+                    
+                    <!-- Album Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6" id="album-grid">
+                        <!-- Albums will be populated by JavaScript -->
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="flex justify-center mt-10">
+                        <nav class="flex items-center space-x-2">
+                            <button class="px-3 py-1 rounded-lg bg-gray-700 text-gray-400 hover:bg-gray-600">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="px-3 py-1 rounded-lg bg-teal-600 text-white">1</button>
+                            <button class="px-3 py-1 rounded-lg bg-gray-700 text-gray-400 hover:bg-gray-600">2</button>
+                            <button class="px-3 py-1 rounded-lg bg-gray-700 text-gray-400 hover:bg-gray-600">3</button>
+                            <button class="px-3 py-1 rounded-lg bg-gray-700 text-gray-400 hover:bg-gray-600">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Player Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-gray-900 bg-opacity-90 backdrop-blur-sm border-t border-gray-700 p-4">
+        <div class="container mx-auto flex flex-col md:flex-row items-center">
+            <!-- Song Info -->
+            <div class="flex items-center w-full md:w-1/4 mb-4 md:mb-0">
+                <img src="https://upload.wikimedia.org/wikipedia/en/e/e6/The_Weeknd_-_Blinding_Lights.png" alt="Now Playing" class="w-12 h-12 rounded mr-3">
+                <div>
+                    <h4 class="font-medium text-sm">Blinding Lights</h4>
+                    <p class="text-gray-400 text-xs">The Weeknd</p>
+                </div>
+                <button class="ml-4 text-gray-400 hover:text-teal-400">
+                    <i class="far fa-heart"></i>
+                </button>
+            </div>
+            
+            <!-- Player Controls -->
+            <div class="w-full md:w-2/4 flex flex-col items-center">
+                <div class="flex items-center space-x-6 mb-2">
+                    <button class="text-gray-400 hover:text-white text-lg">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center text-white hover:bg-teal-600">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-white text-lg">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+                
+                <div class="w-full flex items-center space-x-3">
+                    <span class="text-xs text-gray-400">1:24</span>
+                    <input type="range" min="0" max="100" value="35" class="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                    <span class="text-xs text-gray-400">3:45</span>
+                </div>
+            </div>
+            
+            <!-- Volume and Other Controls -->
+            <div class="w-full md:w-1/4 flex items-center justify-end space-x-4 mt-4 md:mt-0">
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-list"></i>
+                </button>
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fas fa-desktop"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-volume-down text-gray-400"></i>
+                    <input type="range" min="0" max="100" value="80" class="w-20 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample album data
+        const albums = [
+            { id: 1, title: "After Hours", artist: "The Weeknd", year: 2020, genre: "pop", cover: "https://m.media-amazon.com/images/M/MV5BNzEzZTM3YmQtYmUzZS00YWQyLTk5MjQtYWM0NTlhZTc2MWMyXkEyXkFqcGc@._V1_.jpg", songs: 14, duration: "56:19" },
+            { id: 2, title: "Future Nostalgia", artist: "Dua Lipa", year: 2020, genre: "pop", cover: "https://i.scdn.co/image/ab67616d0000b2732172b607853fa89cefa2beb4", songs: 11, duration: "50:31" },
+            { id: 3, title: "Fine Line", artist: "Harry Styles", year: 2019, genre: "pop", cover: "https://i.guim.co.uk/img/media/536664f02b65f653393efa763fb4f62791db5a73/0_2319_8708_5224/master/8708.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=62dbeb781c10a9f403b14c8d6b2e2420", songs: 12, duration: "46:37" },
+            { id: 4, title: "Hollywood's Bleeding", artist: "Post Malone", year: 2019, genre: "hiphop", cover: "https://i.scdn.co/image/ab67616d0000b2739478c87599550dd73bfa7e02", songs: 17, duration: "50:56" },
+            { id: 5, title: "Chromatica", artist: "Lady Gaga", year: 2020, genre: "pop", cover: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/5d/4d/f9/5d4df96a-e95e-2fe9-404a-5d570513762d/20UMGIM15390.rgb.jpg/1200x630bf-60.jpg", songs: 13, duration: "43:08" },
+            { id: 6, title: "Folklore", artist: "Taylor Swift", year: 2020, genre: "pop", cover: "https://static01.nyt.com/images/2020/07/29/arts/26TAYLOR-REVIEW2/26TAYLOR-REVIEW2-mediumSquareAt3X-v2.jpg", songs: 16, duration: "63:29" },
+            { id: 7, title: "Dark Side of the Moon", artist: "Pink Floyd", year: 1973, genre: "rock", cover: "https://i.guim.co.uk/img/static/sys-images/Music/Pix/pictures/2011/8/25/1314281112419/The-sleeve-for-Pink-Floyd-007.jpg?width=465&dpr=1&s=none&crop=none", songs: 10, duration: "42:59" },
+            { id: 8, title: "Random Access Memories", artist: "Daft Punk", year: 2013, genre: "electronic", cover: "https://source.unsplash.com/random/300x300/?daftpunk,album", songs: 13, duration: "74:28" },
+            { id: 9, title: "Thriller", artist: "Michael Jackson", year: 1982, genre: "pop", cover: "https://source.unsplash.com/random/300x300/?michaeljackson,album", songs: 9, duration: "42:19" },
+            { id: 10, title: "Back in Black", artist: "AC/DC", year: 1980, genre: "rock", cover: "https://source.unsplash.com/random/300x300/?acdc,album", songs: 10, duration: "42:11" },
+            { id: 11, title: "The Dark Knight OST", artist: "Hans Zimmer", year: 2008, genre: "soundtrack", cover: "https://source.unsplash.com/random/300x300/?hanszimmer,album", songs: 14, duration: "73:04" },
+            { id: 12, title: "Kind of Blue", artist: "Miles Davis", year: 1959, genre: "jazz", cover: "https://source.unsplash.com/random/300x300/?milesdavis,album", songs: 5, duration: "45:44" },
+            { id: 13, title: "Rumours", artist: "Fleetwood Mac", year: 1977, genre: "rock", cover: "https://source.unsplash.com/random/300x300/?fleetwoodmac,album", songs: 11, duration: "39:43" },
+            { id: 14, title: "Abbey Road", artist: "The Beatles", year: 1969, genre: "rock", cover: "https://source.unsplash.com/random/300x300/?beatles,album", songs: 17, duration: "47:23" },
+            { id: 15, title: "The Eminem Show", artist: "Eminem", year: 2002, genre: "hiphop", cover: "https://source.unsplash.com/random/300x300/?eminem,album", songs: 20, duration: "77:48" },
+            { id: 16, title: "21", artist: "Adele", year: 2011, genre: "pop", cover: "https://source.unsplash.com/random/300x300/?adele,album", songs: 11, duration: "48:12" },
+            { id: 17, title: "Born to Die", artist: "Lana Del Rey", year: 2012, genre: "pop", cover: "https://source.unsplash.com/random/300x300/?lanadelrey,album", songs: 12, duration: "49:28" },
+            { id: 18, title: "Discovery", artist: "Daft Punk", year: 2001, genre: "electronic", cover: "https://source.unsplash.com/random/300x300/?daftpunk2,album", songs: 14, duration: "60:50" },
+            { id: 19, title: "Hotel California", artist: "Eagles", year: 1976, genre: "rock", cover: "https://source.unsplash.com/random/300x300/?eagles,album", songs: 9, duration: "43:28" },
+            { id: 20, title: "The Marshall Mathers LP", artist: "Eminem", year: 2000, genre: "hiphop", cover: "https://source.unsplash.com/random/300x300/?eminem2,album", songs: 18, duration: "72:12" },
+            { id: 21, title: "1989", artist: "Taylor Swift", year: 2014, genre: "pop", cover: "https://source.unsplash.com/random/300x300/?taylorswift2,album", songs: 13, duration: "48:41" },
+            { id: 22, title: "Nevermind", artist: "Nirvana", year: 1991, genre: "rock", cover: "https://source.unsplash.com/random/300x300/?nirvana,album", songs: 12, duration: "42:38" },
+            { id: 23, title: "The Joshua Tree", artist: "U2", year: 1987, genre: "rock", cover: "https://source.unsplash.com/random/300x300/?u2,album", songs: 11, duration: "50:11" },
+            { id: 24, title: "Back to Black", artist: "Amy Winehouse", year: 2006, genre: "soul", cover: "https://source.unsplash.com/random/300x300/?amywinehouse,album", songs: 11, duration: "34:56" }
+        ];
+
+        // DOM elements
+        const albumGrid = document.getElementById('album-grid');
+        const albumCount = document.getElementById('album-count');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        // Current filters
+        let currentGenre = 'all';
+        let currentYear = 'all';
+        
+        // Render albums
+        function renderAlbums() {
+            albumGrid.innerHTML = '';
+            
+            const filteredAlbums = albums.filter(album => {
+                const genreMatch = currentGenre === 'all' || album.genre === currentGenre;
+                const yearMatch = currentYear === 'all' || album.year.toString() === currentYear;
+                return genreMatch && yearMatch;
+            });
+            
+            albumCount.textContent = filteredAlbums.length;
+            
+            filteredAlbums.forEach(album => {
+                const albumElement = document.createElement('div');
+                albumElement.className = 'album-card';
+                albumElement.innerHTML = `
+                    <div class="relative mb-3 overflow-hidden rounded-lg album-cover">
+                        <img src="${album.cover}" alt="${album.title}" class="w-full h-auto rounded-lg">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center">
+                            <button class="play-btn w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                                <i class="fas fa-play text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="font-medium text-sm mb-1">${album.title}</h3>
+                        <p class="text-gray-400 text-xs">${album.artist} • ${album.year}</p>
+                        <p class="text-gray-500 text-xs mt-1">${album.songs} songs • ${album.duration}</p>
+                    </div>
+                `;
+                
+                albumGrid.appendChild(albumElement);
+            });
+        }
+        
+        // Filter albums by genre
+        function filterByGenre(genre) {
+            currentGenre = genre;
+            renderAlbums();
+            
+            // Update active button
+            filterButtons.forEach(btn => {
+                if (btn.dataset.genre === genre) {
+                    btn.classList.add('active');
+                } else if (btn.dataset.genre) {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // Filter albums by year
+        function filterByYear(year) {
+            currentYear = year;
+            renderAlbums();
+            
+            // Update active button
+            filterButtons.forEach(btn => {
+                if (btn.dataset.year === year) {
+                    btn.classList.add('active');
+                } else if (btn.dataset.year) {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // Event listeners for filter buttons
+        filterButtons.forEach(btn => {
+            if (btn.dataset.genre) {
+                btn.addEventListener('click', () => filterByGenre(btn.dataset.genre));
+            }
+            
+            if (btn.dataset.year) {
+                btn.addEventListener('click', () => filterByYear(btn.dataset.year));
+            }
+        });
+        
+        // Initialize
+        renderAlbums();
+        filterByGenre('all');
+        filterByYear('all');
+    </script>
+</body>
+</html>
